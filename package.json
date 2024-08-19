@@ -15,6 +15,6 @@
   "dependencies": {
     "@massalabs/massa-web3": "^4.0.3",
     "dotenv": "^16.4.5",
-    "tsc": "^2.0.4"
+    "typescript": "^5.5.4"
   }
 }
