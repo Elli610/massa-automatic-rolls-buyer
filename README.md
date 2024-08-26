@@ -32,8 +32,8 @@ FEE=0
 ts-node src/index.ts
 
 // or compile and run
-npm run build
-npm start
+yarn run build
+yarn start
 ```
 
 ## License

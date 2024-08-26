@@ -55,3 +55,4 @@ async function buyRolls(web3Client: Client, stakerWallet: IAccount) {
     buyRolls(web3Client, stakerWallet);
   }, interval * 1000)
 })();
+
