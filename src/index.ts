@@ -13,6 +13,22 @@ const fee = BigInt(process.env.FEE || 0);
 const chainId = CHAIN_ID.MainNet;
 
 
+async function buyRolls(web3Client: Client, stakerWallet: IAccount) {
+  // get staker balance
+  const stakerBalance = stakerWallet.address ? await web3Client.wallet().getAccountBalance(stakerWallet.address) : 0n;
+
+  if (stakerBalance && stakerBalance.final >= fromMAS(100) + fee) {
+
+    // sender buys some rolls
+    const buyRollsTxId = await web3Client.wallet().buyRolls({
+      amount: 1n,
+      fee: fromMAS(0),
+    } as IRollsData)
+    console.log('Buy Rolls Tx Id ', buyRollsTxId)
+  }
+}
+
+
 (async () => {
 
   const stakerWallet: IAccount = await WalletClient.getAccountFromSecretKey(stakerPrivateKey);
@@ -32,20 +48,10 @@ const chainId = CHAIN_ID.MainNet;
 
   await web3Client.wallet().addAccountsToWallet([stakerWallet])
 
+  buyRolls(web3Client, stakerWallet);
+
   // check staker balance every "interval" seconds
   setInterval(async () => {
-    // get staker balance
-    const stakerBalance = stakerWallet.address ? await web3Client.wallet().getAccountBalance(stakerWallet.address) : 0n;
-
-    if (stakerBalance && stakerBalance.final >= fromMAS(100) + fee) {
-
-      // sender buys some rolls
-      const buyRollsTxId = await web3Client.wallet().buyRolls({
-        amount: 1n,
-        fee: fromMAS(0),
-      } as IRollsData)
-      console.log('Buy Rolls Tx Id ', buyRollsTxId)
-    }
-
+    buyRolls(web3Client, stakerWallet);
   }, interval * 1000)
 })();
