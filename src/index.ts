@@ -9,7 +9,7 @@ const publicApi = process.env.PUBLIC_API;
 const privateApi = process.env.PRIVATE_API;
 const stakerPrivateKey = process.env.STAKER_PRIVATE_KEY;
 const interval = Number(process.env.INTERVAL || 60 * 60 * 4); // 4 hours
-const fee = BigInt(process.env.FEE || 0);
+const fee = (process.env.FEE || "0.01") === "0" ? "0.01" : (process.env.FEE || "0.01");
 const chainId = CHAIN_ID.MainNet;
 
 
@@ -17,12 +17,12 @@ async function buyRolls(web3Client: Client, stakerWallet: IAccount) {
   // get staker balance
   const stakerBalance = stakerWallet.address ? await web3Client.wallet().getAccountBalance(stakerWallet.address) : 0n;
 
-  if (stakerBalance && stakerBalance.final >= fromMAS(100) + fee) {
+  if (stakerBalance && stakerBalance.final >= fromMAS(100) + fromMAS(fee)) {
 
     // sender buys some rolls
     const buyRollsTxId = await web3Client.wallet().buyRolls({
       amount: 1n,
-      fee: fromMAS(0),
+      fee: fromMAS(fee),
     } as IRollsData)
     console.log('Buy Rolls Tx Id ', buyRollsTxId)
   }
